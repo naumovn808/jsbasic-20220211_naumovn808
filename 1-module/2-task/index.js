@@ -13,13 +13,17 @@ function isValid(name) {
   const a = " ";
   for (let i = 0; i < name.length; i++) {
     if (name[i] == a) {
-      alert("не должно быть пробелов");
+      return false;
     }
   }
   if (name == "") {
-    alert("укажите ваше имя");
+    return false;
   } else if (name.length < 4) {
-    alert("должно быть минимум 4 символа");
+    return false;
+  } else if (name === null) {
+    return false;
+  } else {
+    return true;
   }
 }
 
