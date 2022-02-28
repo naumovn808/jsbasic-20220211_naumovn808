@@ -11,6 +11,14 @@ function print(text) {
  */
 function isValid(name) {
   const a = " ";
+  if (name === null) {
+    return false;
+  }
+
+  if (name === undefined) {
+    return false;
+  }
+
   for (let i = 0; i < name.length; i++) {
     if (name[i] == a) {
       return false;
@@ -18,14 +26,16 @@ function isValid(name) {
   }
   if (name == "") {
     return false;
-  } else if (name.length < 4) {
+
+  }
+  if (name.length < 4) {
     return false;
-  } else if (name === null) {
-    return false;
+
   } else {
     return true;
   }
 }
+
 
 function sayHello() {
   let userName = prompt('Введите ваше имя');
