@@ -1,52 +1,36 @@
 export default class ProductCard {
-  elem;
   constructor(product) {
-    this.name = product.name;
-    this.price = product.price;
-    this.category = product.category;
-    this.image = product.image;
-    this.id = product.id;
-    this.elem = document.createElement('div');
-    this.card();
-    this.userEvent();
-  }
+    this.product = product;
+    this.cardProduct = document.createElement(`div`);
+    this.cardProduct.classList.add("card");
 
-  get elem() {
-    return this.elem;
-  }
+    this.cardProduct.insertAdjacentHTML(
+      "beforeEnd",
+      `<div class="card__top">
+    <img src="/assets/images/products/${product.image}" class="card__image" alt="product">
+    <span class="card__price">€${product.price.toFixed(2)}</span>
+  </div>
+  <div class="card__body">
+    <div class="card__title">${product.name}</div>
+    <button type="button" class="card__button">
+      <img src="/assets/images/icons/plus-icon.svg" alt="icon">
+    </button>
+  </div>`
+    );
+    this.cardProduct.addEventListener('click', (event) => {
+      const btn = event.target.closest('.card__button');
+      if (btn) {
+        const productAddEvent = new CustomEvent('product-add', {
+          detail: this.product.id,
+          bubbles: true,
+        });
 
-  card() {
-    let cardCreate = `<div class="card">
-    <div class="card__top">
-        <img src="/assets/images/products/${this.image}" class="card__image" alt="product">
-        <span class="card__price">€${this.price.toFixed(2)}</span>
-    </div>
-    <div class="card__body">
-        <div class="card__title">${this.name}</div>
-        <button type="button" class="card__button">
-            <img src="/assets/images/icons/plus-icon.svg" alt="icon">
-        </button>
-    </div>
-</div>`;
-    this.elem.innerHTML = cardCreate;
-
-  }
-
-  userEvent() {
-
-    const btn = this.elem.querySelector('.card__button');
-    btn.addEventListener('click', () => {
-      const customEvent = new CustomEvent("product-add", {
-        detail: this.id,
-        bubbles: true
-      });
-      this.elem.dispatchEvent(customEvent);
-
+        btn.dispatchEvent(productAddEvent);
+      }
 
     });
-
-
   }
-
-
+  get elem() {
+    return this.cardProduct;
+  }
 }
