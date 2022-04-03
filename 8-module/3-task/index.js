@@ -6,51 +6,58 @@ export default class Cart {
   }
 
   addProduct(product) {
-    let cartItem = this.cartItems.find(
-      item => item.product.id == product.id
-    );
-    if (!cartItem) {
-      cartItem = {
-        product,
-        count: 1
-      };
-      this.cartItems.push(cartItem);
-    } else {
-      cartItem.count++;
-    }
+    if (product) {
+      let cartItem = this.cartItems.find(
+        (item) => item.product.id === product.id
+      );
+      if (cartItem) {
+        cartItem.count++;
+      } else {
+        cartItem = {
+          product,
+          count: 1,
+        };
+        this.cartItems.push(cartItem);
+      }
 
-    this.onProductUpdate(cartItem);
+      this.onProductUpdate(this.cartItems);
+    } else {
+      return;
+    }
   }
 
   updateProductCount(productId, amount) {
-    let cartItem = this.cartItems.find(item => item.product.id == productId);
-    cartItem.count += amount;
+    this.cartItems.forEach((item, index) => {
+      if (item.product.id === productId) {item.count += amount;}
+      if (item.count == 0) {this.cartItems.splice(index, 1);}
+    });
 
-    if (cartItem.count === 0) {
-      this.cartItems.splice(this.cartItems.indexOf(cartItem), 1);
-    }
-
-    this.onProductUpdate(cartItem);
-  }
-
-  onProductUpdate() {
-    // реализуем в следующей задаче
-
-    this.cartIcon.update(this);
+    this.onProductUpdate(this.cartItems);
   }
 
   isEmpty() {
-    return this.cartItems.length === 0;
+    return !this.cartItems.length;
   }
 
   getTotalCount() {
-    return this.cartItems.reduce((sum, item) => sum + item.count, 0);
+    return this.cartItems
+      .map((el) => el.count)
+      .reduce((sum, current) => sum + current);
+
+
   }
 
   getTotalPrice() {
-    return this.cartItems.reduce(
-      (sum, item) => sum + item.product.price * item.count,
-      0
-    );
+    return this.cartItems
+      .map((el) => el.product.price * el.count)
+      .reduce((sum, current) => sum + current);
+
+
+  }
+
+  onProductUpdate(cartItem) {
+    // реализуем в следующей задаче
+
+    this.cartIcon.update(this);
   }
 }
